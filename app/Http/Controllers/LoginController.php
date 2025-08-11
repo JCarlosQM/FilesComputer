@@ -34,7 +34,7 @@ class LoginController extends Controller
             'email' => $usuario->email
         ]);
 
-        return redirect()->route('dashboard.dashboard');
+        return redirect()->route('dashboard');
     }
 
 }

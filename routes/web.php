@@ -7,12 +7,18 @@ use App\Http\Controllers\UsuarioController;
 
 Route::get('/ver-env', function () {
     return response()->json([
-        'key' => env('CLOUDINARY_KEY'),
-        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-        'secret' => env('CLOUDINARY_SECRET'),
+        'key' => env('CLOUDINARY_CLOUD_NAME'),
+        'cloud_name' => env('CLOUDINARY_API_KEY'),
+        'secret' => env('CLOUDINARY_API_SECRET'),
         'url' => env('CLOUDINARY_URL'),
     ]);
 });
+
+Route::get('/test-cloudinary', function () {
+    $cloudinaryConfig = config('cloudinary.cloud');
+    return response()->json($cloudinaryConfig);
+});
+
 
 
 /*
@@ -68,7 +74,8 @@ Route::middleware([])->group(function () {
         if (!session()->has('usuario')) {
             abort(401, 'No autorizado');
         }
-        return app()->call([ErrorCodigoController::class, 'store']);
+        // Asegura que el contenedor instancie el controlador (evita llamada estática)
+        return app()->call(\App\Http\Controllers\ErrorCodigoController::class . '@store');
     })->name('errores.api.store');
 
 

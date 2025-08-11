@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="m-0">Gestión de Errores de Código</h2>
-        <button class="btn btn-success" onclick="abrirModalCrear()">
+        <button class="btn btn-success" onclick="abrirModalCrearError()">
             <i class="bi bi-plus-lg me-1"></i> Crear Error
         </button>
     </div>

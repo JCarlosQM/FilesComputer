@@ -217,81 +217,77 @@ async function eliminarUsuario(id) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarDataTable();
+    // Inicializa la tabla de usuarios solo si existe en la página actual
+    if (document.getElementById('tabla-usuarios')) {
+        inicializarDataTable();
+    }
 
-    document.getElementById("createForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        crearUsuario();
-    });
+    // Asocia listeners de creación/edición de usuario solo si los campos existen (evita conflicto con formularios de otras vistas)
+    const createUserForm = document.getElementById("createForm");
+    if (createUserForm && document.getElementById("createNombre")) {
+        createUserForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            crearUsuario();
+        });
+    }
 
-    document.getElementById("editForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        actualizarUsuario();
-    });
+    const editForm = document.getElementById("editForm");
+    if (editForm) {
+        editForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            actualizarUsuario();
+        });
+    }
 });
 
 
 // gestion de errores 
 
 
-function abrirModalCrear() {
+function abrirModalCrearError() {
     document.getElementById('numeroError').value = '';
     document.getElementById('descripcion').value = '';
     document.getElementById('imagen').value = '';
     new bootstrap.Modal(document.getElementById('createModal')).show();
 }
 
-async function subirImagenCloudinary(file) {
-    const url = 'https://api.cloudinary.com/v1_1/dqntgsqp1/upload';
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'tu_upload_preset_unsigned');
-
-    const response = await fetch(url, {
-        method: 'POST',
-        body: formData
-    });
-
-    if (!response.ok) throw new Error('Error al subir imagen');
-
-    const data = await response.json();
-    return data.secure_url; // o data.url
-}
-
-
-document.getElementById('createForm').addEventListener('submit', async (e) => {
+// Crear error de código (el backend sube a Cloudinary)
+const createErrorForm = document.getElementById('createForm');
+if (createErrorForm && document.getElementById('numeroError')) {
+createErrorForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
-        const numero_error = document.getElementById('numeroError').value.trim();
-        const descripcion = document.getElementById('descripcion').value.trim();
-        const fileInput = document.getElementById('imagen');
-        if (!fileInput.files.length) throw new Error('Debes seleccionar una imagen');
+        const formElement = document.getElementById('createForm');
+        const formData = new FormData(formElement);
 
-        const imagen_url = await subirImagenCloudinary(fileInput.files[0]);
-
-        // Enviar datos al backend (ajusta URL si es necesario)
         const res = await fetch('/api/errores', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCSRF()
+            headers: {
+                'X-CSRF-TOKEN': getCSRF(),
+                'Accept': 'application/json'
             },
-            body: JSON.stringify({ numero_error, descripcion, imagen_url })
+            body: formData
         });
 
         if (!res.ok) {
-            const errData = await res.json();
-            throw new Error(errData.message || 'Error al crear el registro');
+            let mensaje = '';
+            try {
+                const errData = await res.json();
+                mensaje = errData.message || (errData.errors ? Object.values(errData.errors).flat().join(', ') : '');
+            } catch (e) {
+                try { mensaje = await res.text(); } catch {}
+            }
+            throw new Error(mensaje || 'Error al crear el registro');
         }
 
-        new bootstrap.Modal(document.getElementById('createModal')).hide();
+        bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
         await mostrarAlerta('¡Creado!', 'Error registrado correctamente', 'success');
         tablaErrores.ajax.reload(null, false);
     } catch (error) {
         await mostrarAlerta('Error', error.message, 'error');
     }
 });
+}
 
 async function eliminarError(id) {
     const confirmado = await Swal.fire({
