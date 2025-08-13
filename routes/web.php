@@ -11,7 +11,11 @@ use App\Http\Controllers\UsuarioController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', fn() => view('users.home'))->name('home');
+Route::get('/', [ErrorCodigoController::class, 'indexUser'])->name('home');
+
+Route::get('/buscar', [ErrorCodigoController::class, 'buscar'])->name('buscar');
+
+
 
 Route::get('/login', fn() => view('auth.login'))->name('login')->middleware('guest');
 
@@ -73,6 +77,8 @@ Route::put('/errores/{id}', [ErrorCodigoController::class, 'update']);
     Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
     // ✅ Ruta que carga la vista Blade con la tabla y modals
     Route::get('/usuarios', [UsuarioController::class, 'vista'])->name('usuarios.index');
+
+
 
     // ✅ Ruta API que devuelve JSON (usada por JS)
     Route::get('/api/usuarios', [UsuarioController::class, 'index'])->name('usuarios.api');

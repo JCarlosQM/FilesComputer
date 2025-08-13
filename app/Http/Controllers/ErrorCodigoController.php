@@ -16,6 +16,26 @@ class ErrorCodigoController extends Controller
         $this->service = $service;
     }
 
+    // usuarios 
+
+    public function indexUser()
+    {
+        $errores = $this->service->listar();
+        return view('users.home', compact('errores'));
+    }
+
+    public function buscar(Request $request)
+    {
+        $numero = $request->input('query', '');
+    
+        $errores = $this->service->buscarErroresPorNumero($numero);
+    
+        return view('users.home', compact('errores'));
+    }
+    
+
+    // administrador 
+
     public function index()
     {
         return view('dashboard.erroresdash');
@@ -51,7 +71,6 @@ class ErrorCodigoController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['message' => $e->errors()], 422);
         } catch (Exception $e) {
-            \Log::error('Error al crear el error', ['exception' => $e]);
             return response()->json(['message' => 'Error al crear el error: ' . $e->getMessage()], 500);
         }
     }

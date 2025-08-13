@@ -1,4 +1,4 @@
-<footer class="bg-dark text-white py-4 mt-5">
+<footer class="text-white py-4 mt-5 aspectIndep">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-12">

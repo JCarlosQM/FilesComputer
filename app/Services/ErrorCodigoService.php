@@ -11,6 +11,14 @@ use Exception;
 
 class ErrorCodigoService
 {
+
+    public function buscarErroresPorNumero($numero)
+    {
+        return DB::table('errores_codigo')
+            ->where('numero_error', 'like', "%$numero%")
+            ->get();
+    }
+
     public function listar()
     {
         return DB::table('errores_codigo')
