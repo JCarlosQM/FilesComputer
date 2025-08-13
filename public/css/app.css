@@ -205,10 +205,3 @@ a, button, .sidebar-link, .nav-link, .dropdown-toggle {
 
 /* tablas  */
 
-table {
-    border-collapse: separate !important;
-    border-spacing: 0;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }

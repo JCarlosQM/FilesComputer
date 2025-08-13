@@ -11,17 +11,23 @@
         </button>
     </div>
 
-    <table id="tabla-usuarios" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="card m-2 p-2">
+        <div class="table-responsive">
+            <table id="tabla-usuarios" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+        
+
 
     <!-- Modal Crear Usuario -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">

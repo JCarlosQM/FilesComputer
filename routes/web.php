@@ -5,22 +5,6 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ErrorCodigoController;
 use App\Http\Controllers\UsuarioController;
 
-Route::get('/ver-env', function () {
-    return response()->json([
-        'key' => env('CLOUDINARY_CLOUD_NAME'),
-        'cloud_name' => env('CLOUDINARY_API_KEY'),
-        'secret' => env('CLOUDINARY_API_SECRET'),
-        'url' => env('CLOUDINARY_URL'),
-    ]);
-});
-
-Route::get('/test-cloudinary', function () {
-    $cloudinaryConfig = config('cloudinary.cloud');
-    return response()->json($cloudinaryConfig);
-});
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas
@@ -77,6 +61,11 @@ Route::middleware([])->group(function () {
         // Asegura que el contenedor instancie el controlador (evita llamada estática)
         return app()->call(\App\Http\Controllers\ErrorCodigoController::class . '@store');
     })->name('errores.api.store');
+
+    Route::delete('/errores/{id}', [ErrorCodigoController::class, 'destroy']);
+
+    Route::get('/errores/{id}', [ErrorCodigoController::class, 'show']);
+Route::put('/errores/{id}', [ErrorCodigoController::class, 'update']);
 
 
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
